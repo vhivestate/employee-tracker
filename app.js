@@ -2,6 +2,8 @@ require("dotenv").config();
 const { Console } = require("console");
 const inquirer = require("inquirer");
 const db = require("./db/connection");
+const express = require('express');
+
 
 initialize = () => {
     inquirer
@@ -9,7 +11,16 @@ initialize = () => {
             type: 'list',
             name: 'choices',
             message: 'What would you like to do?',
-            choices: ['View Departments', 'View Roles', 'View Employees', 'Add Department', 'Add Employee', 'Add Role', 'Update Employee Role', 'Quit']
+            choices: [
+                "View All Roles",
+                "Add Role",
+                "View All Employees",
+                "Add Employee",
+                "Update Employee Role",
+                "View All Departments",
+                "Add Department",
+                "Quit"
+            ]
         }).then((data) => {
             switch (data.choices) {
                 case 'View Departments':
