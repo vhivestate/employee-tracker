@@ -1,7 +1,7 @@
 const { Console } = require("console");
 const inquirer = require("inquirer");
 const db = require("./db/connection");
-const express = require('express');
+const mysql = require('mysql2');
 
 
 initialize = () => {
@@ -23,13 +23,13 @@ initialize = () => {
         }).then((data) => {
             switch (data.choices) {
                 case 'View Departments':
-                    viewDep();
+                    viewDepartment();
                     break;
                 case 'View Roles':
-                    viewRoles();
+                    viewRole();
                     break;
                 case 'View Employees':
-                    viewAllEmp();
+                    viewEmp();
                     break;
                 case 'Add Department':
                     addDep();
@@ -41,12 +41,43 @@ initialize = () => {
                     addRole();
                     break;
                 case 'Update Employee Role':
-                    upEmp();
+                    updateEmp();
                     break;
                 case 'Quit':
                     break;
             }
-            console.log(data.choices + ' chosen!!!');
+            console.log(data.choices + ' chosen');
         })
 };
 initialize();
+
+// View department
+const viewDepartment = () => {
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+      if (err) {
+        console.error(err);
+      }
+      console.table(rows);
+      initialize();
+    });
+  };
+
+//view roles
+const viewRole = () => {
+    db.query(
+        `SELECT role.id, role.title, role.salary, departments.name
+            FROM role
+            LEFT JOIN departments
+            ON role.departments_id = departments.id `,
+        function (err, results, fields) {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+
+            console.table(results);
+            initialize();
+        }
+    );
+};
