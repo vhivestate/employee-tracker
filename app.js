@@ -4,10 +4,12 @@ const db = require("./db/connection");
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const express = require('express');
+
 // SQL role query
 const wholeTable =`SELECT * FROM department`;
 const departmentName = `SELECT name FROM department`;
 const PORT = process.env.PORT || 3001;
+
 const app = express();
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
