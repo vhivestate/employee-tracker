@@ -2,6 +2,7 @@ const { Console } = require("console");
 const inquirer = require("inquirer");
 const db = require("./db/connection");
 const mysql = require('mysql2');
+const cTable = require('console.table');
 
 
 initialize = () => {
@@ -52,32 +53,38 @@ initialize = () => {
 initialize();
 
 // View department
-const viewDepartment = () => {
-    const sql = `SELECT * FROM departments`;
-    db.query(sql, (err, rows) => {
-      if (err) {
-        console.error(err);
-      }
-      console.table(rows);
-      initialize();
-    });
-  };
+// const viewDepartment = () => {
+//     const sql = `SELECT * FROM departments`;
+//     db.query(sql, (err, rows) => {
+//       if (err) {
+//         console.error(err);
+//       }
+//       console.table(rows);
+//       initialize();
+//     });
+//   };
 
 //view roles
 const viewRole = () => {
-    db.query(
-        `SELECT role.id, role.title, role.salary, departments.name
-            FROM role
-            LEFT JOIN departments
-            ON role.departments_id = departments.id `,
-        function (err, results, fields) {
-            if (err) {
-                console.log(err.message);
-                return;
-            }
+    console.log(viewRole);
+    const sql = `SELECT r.id ID, r.title Title, departments.name departments, r.salary Salary
+                 FROM role r
+                 LEFT JOIN departments ON r.departments_id = departments.id`;
 
-            console.table(results);
-            initialize();
-        }
-    );
+    db.promise().query(sql)
+        .then(([rows]) => {
+            getRole(rows);
+            console.table(rows);
+        });
+};
+
+const getRole = (data) => { 
+    let role = [];
+    // Show only title of role
+    data.forEach(element => {
+        role.push(element.Title);
+        
+    });
+    console.log(role);
+    // console.log("The data is",data);
 };
