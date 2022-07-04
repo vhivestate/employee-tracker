@@ -3,7 +3,19 @@ const inquirer = require("inquirer");
 const db = require("./db/connection");
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const express = require('express');
+// SQL role query
+const wholeTable =`SELECT * FROM department`;
+const departmentName = `SELECT name FROM department`;
+const PORT = process.env.PORT || 3001;
+const app = express();
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 
 initialize = () => {
     inquirer
@@ -52,6 +64,40 @@ initialize = () => {
 };
 initialize();
 
+// GET all employees
+app.get('/api/employee', (req, res) => {
+    const sql = `SELECT * FROM employee`;
+  
+    db.query(sql, (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: 'success',
+        data: rows
+      });
+    });
+  });
+
+  // Get a single employee
+app.get('/api/employee/:id', (req, res) => {
+    const sql = `SELECT * FROM employee WHERE id = ?`;
+    const params = [req.params.id];
+  
+    db.query(sql, params, (err, row) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: 'success',
+        data: row
+      });
+    });
+  });
+  
+
 // View department
 // const viewDepartment = () => {
 //     const sql = `SELECT * FROM departments`;
@@ -64,27 +110,56 @@ initialize();
 //     });
 //   };
 
-//view roles
-const viewRole = () => {
-    console.log(viewRole);
-    const sql = `SELECT r.id ID, r.title Title, departments.name departments, r.salary Salary
-                 FROM role r
-                 LEFT JOIN departments ON r.departments_id = departments.id`;
+//   const getDepartmentsTable = () => {
 
-    db.promise().query(sql)
-        .then(([rows]) => {
-            getRole(rows);
-            console.table(rows);
-        });
-};
+//     return db.promise().query(wholeTable)
+//         .then(([rows]) => {
+//             return rows;
+//         });
+    
+// };
 
-const getRole = (data) => { 
-    let role = [];
-    // Show only title of role
-    data.forEach(element => {
-        role.push(element.Title);
+// const displayDepartmentsTable = () => {
+//     getDepartmentsTable().then(data => {
+//         console.log('\n');
+//         console.table(data);
+//         console.log('\n');
+//     });
+// };
+
+// const viewDepartment = async () => {
+//     const departmentName = `SELECT name FROM departments
+//                             ORDER BY name`;
+//     try {
+//         const departments = await db.promise().query(departmentName)
+//         return departments[0].map(item => item.name);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// };
+
+// const getRole = (data) => { 
+//     let role = [];
+//     // Show only title of role
+//     data.forEach(element => {
+//         role.push(element.title);
         
-    });
-    console.log(role);
+//     });
+//     console.log(role);
     // console.log("The data is",data);
-};
+// };
+
+//view roles
+// const viewRole = () => {
+//     console.log(viewRole);
+//     const sql = `SELECT role.id ID, role.title Title, departments.name departments, role.salary Salary
+//                  FROM role
+//                  LEFT JOIN departments ON role.departments_id = departments.id`;
+
+//     db.promise().query(sql)
+//         .then(([rows]) => {
+//             getRole(rows);
+//             console.table(rows);
+//         });
+// };
+
