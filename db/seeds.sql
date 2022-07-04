@@ -6,14 +6,6 @@ VALUES
 ('Furniture'),
 ('Tools');
 
-INSERT INTO role (title, salary, department_id)
-VALUES
-  ('Sales', 32.000, 2),
-  ('Cashier', 17.000, 1),
-  ('Returns', 22.000, 2),
-  ('Management', 60.000, 3);
-
-
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
   ('Virginia', 'Woolf', 4, NULL),
@@ -25,3 +17,13 @@ VALUES
   ('Montague', 'Summers', 4, NULL),
   ('Octavia', 'Butler', 1, 7),
   ('Unica', 'Zurn', 1, 7);
+
+INSERT INTO role (title, salary, department_id)
+VALUES
+  ('Sales', 32.000, 2),
+  ('Cashier', 17.000, 1),
+  ('Returns', 22.000, 2),
+  ('Management', 60.000, 3);
+
+
+
