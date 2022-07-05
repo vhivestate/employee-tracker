@@ -19,25 +19,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 
-let departments = [];
-let roles = [];
-let employees = [];
-
 //  view all departments
-// app.get('/api/departments', (req, res) => {
-//     const sql = `SELECT * FROM departments`;
-  
-//     db.query(sql, (err, rows) => {
-//       if (err) {
-//         res.status(500).json({ error: err.message });
-//         return;
-//       }
-//       res.json({
-//         message: 'success',
-//         data: rows
-//       });
-//     });
-//   });
 const viewDepartments = () => {
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
@@ -51,20 +33,6 @@ const viewDepartments = () => {
   
 
 //  view all roles
-// app.get('/api/role', (req, res) => {
-//     const sql = `SELECT * FROM role`;
-  
-//     db.query(sql, (err, rows) => {
-//       if (err) {
-//         res.status(500).json({ error: err.message });
-//         return;
-//       }
-//       res.json({
-//         message: 'success',
-//         data: rows
-//       });
-//     });
-//   });
 const viewRoles = () => {
     const sql = `SELECT * FROM role`;
     db.query(sql, (err, rows) => {
@@ -77,20 +45,6 @@ const viewRoles = () => {
   };
 
 // view all employees
-// app.get('/api/employee', (req, res) => {
-//     const sql = `SELECT * FROM employee`;
-  
-//     db.query(sql, (err, rows) => {
-//       if (err) {
-//         res.status(500).json({ error: err.message });
-//         return;
-//       }
-//       res.json({
-//         message: 'success',
-//         data: rows
-//       });
-//     });
-//   });
 const viewEmployees = () => {
     const sql = `SELECT * FROM employee`;
     db.query(sql, (err, rows) => {
@@ -107,12 +61,12 @@ const viewEmployees = () => {
 const addDepartments = () => {
  inquirer
       .prompt({
-        type: 'text',
+        type: 'input',
         name: 'name',
         message: 'Enter the name of new department: '
-      })
+      }).then(function(data){
         const sql = `INSERT INTO departments (name) VALUES (?)`;
-        const params = [departments, name];
+        const params = [data.name];
         db.query(sql, params, (err, result) => {
           if (err) {
             console.error(err);
@@ -121,10 +75,56 @@ const addDepartments = () => {
           console.log("Department added!");
           initialize();
       });
+      }).catch(function(err){
+        console.log(err);
+      })
+
   };
 
   //Add role
+  const addRole = () => {
+    //selecting dep ids for list choices
+    db.query('select id from departments', (err, 
+        department_ids) => {
+            console.log(department_ids);
+            //map creates new array so dep id choices
+            let ids = department_ids.map(element => element.id); 
+            console.log(ids);
+        inquirer
+        .prompt([{
+          type: 'input',
+          name: 'title',
+          message: 'Enter employee title '
+        },
+        {
+           type: 'number',
+           name: 'salary',
+           message: 'Enter the salary: '
+        },
+        {
+           type: 'list',
+           name: 'id',
+           choices: ids,
+           
+        }
+       ]).then(function(data){
+          const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+          const params = [data.title, data.salary, data.id];
+          db.query(sql, params, (err, result) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log("Department added!");
+            initialize();
+        });
+        }).catch(function(err){
+          console.log(err);
+        })
+    })
 
+   
+     };
   //Add employee
 
   //Update employee
@@ -135,6 +135,7 @@ const addDepartments = () => {
     process.exit();
   };
 
+  //Main menu
   initialize = () => {
     inquirer
         .prompt({
@@ -162,16 +163,16 @@ const addDepartments = () => {
                 case 'View Employees':
                     viewEmployees();
                     break;
-                case 'Add Department':
+                case 'Add a department':
                     addDepartments();
                     break;
-                case 'Add Employee':
+                case 'Add an employee':
                     addEmployee();
                     break;
-                case 'Add Role':
+                case 'Add a role':
                     addRole();
                     break;
-                case 'Update Employee Role':
+                case 'Update employee role':
                     updateEmployee();
                     break;
                 case 'Quit':
