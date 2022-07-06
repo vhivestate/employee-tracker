@@ -121,11 +121,60 @@ const addDepartments = () => {
         }).catch(function(err){
           console.log(err);
         })
-    })
-
-   
+      })
      };
+
   //Add employee
+  const addEmployee = () => {
+        inquirer
+        .prompt([{
+          type: 'input',
+          name: 'first',
+          message: 'Enter employee first name: '
+        },
+        {
+           type: 'input',
+           name: 'last',
+           message: 'Enter employee last name: '
+        },
+        {
+           type: 'list',
+           name: 'id',
+           message: 'Choose employee role id:',
+           choices: [
+            '1',
+            '2',
+            '3'
+           ]
+        },
+
+        {
+            type: 'list',
+            name: 'manager',
+            message: 'Choose employee manager id:',
+            choices: [
+                '1',
+                '4',
+                '7'
+            ]
+        }
+
+       ]).then(function(data){
+          const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+          const params = [data.first, data.last, data.id, data.manager];
+          db.query(sql, params, (err, result) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log("Employee added!");
+            initialize();
+        });
+        }).catch(function(err){
+          console.log(err);
+        })
+      
+     };
 
   //Update employee
 
