@@ -191,7 +191,7 @@ const addDepartments = () => {
            ]
         },
        ]).then(function(data){
-    const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+    const sql = `UPDATE employee SET role_id WHERE id = ? VALUES (?, ?)`;
           const params = [data.employee, data.role];
           db.query(sql, params, (err, result) => {
             if (err) {
