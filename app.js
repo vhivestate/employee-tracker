@@ -5,19 +5,7 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 const express = require('express');
 
-// SQL role query
-const wholeTable =`SELECT * FROM department`;
-const departmentName = `SELECT name FROM department`;
-const PORT = process.env.PORT || 3001;
 
-const app = express();
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
 
 //  view all departments
 const viewDepartments = () => {
@@ -86,10 +74,10 @@ const addDepartments = () => {
     //selecting dep ids for list choices
     db.query('select id from departments', (err, 
         department_ids) => {
-            console.log(department_ids);
+            // console.log(department_ids);
             //map creates new array so dep id choices
             let ids = department_ids.map(element => element.id); 
-            console.log(ids);
+            // console.log(ids);
         inquirer
         .prompt([{
           type: 'input',
@@ -147,7 +135,6 @@ const addDepartments = () => {
             '3'
            ]
         },
-
         {
             type: 'list',
             name: 'manager',
@@ -177,6 +164,61 @@ const addDepartments = () => {
      };
 
   //Update employee
+  const updateEmployee = () => {
+    //selecting names for list choices
+    db.query('select first_name from employee', (err, 
+        emp) => {
+            // console.log(department_ids);
+            //map creates new array so dep id choices
+            let employee = emp.map(element => element.first_name); 
+            // console.log(ids);
+        inquirer
+        .prompt([
+        {
+          type: "list",
+          name: "employee",
+          message: "Please select the employee whose role you'd like to update:",
+          choices: employee,
+        },
+        {
+          type: "list",
+          name: "role",
+          message: "Please select the employee's new role:",
+          choices: [
+            '1',
+            '2',
+            '3'
+           ]
+        },
+       ]).then(function(data){
+    const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+          const params = [data.employee, data.role];
+          db.query(sql, params, (err, result) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            console.log("Employee role updated!");
+            initialize();
+        });
+        }).catch(function(err){
+          console.log(err);
+        })
+      })
+     };
+
+//   const updateEmployeeRole = (employeeObject) => {
+//     const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+//     const params = [employeeObject.role, employeeObject.employee];
+//     db.query(sql, params, (err, result) => {
+//       if (err) {
+//         console.error(err);
+//         return;
+//       }
+//       console.log("Employee role has been updated.");
+//       initialize();
+//     });
+//   };
 
 // quit
   const quit = () => {
