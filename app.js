@@ -163,15 +163,15 @@ const addDepartments = () => {
       
      };
 
-  //Update employee
+  //Update employee role
   const updateEmployee = () => {
     //selecting names for list choices
-    db.query('select first_name from employee', (err, 
+    db.query('select id, first_name from employee', (err, 
         emp) => {
-            // console.log(department_ids);
-            //map creates new array so dep id choices
+            // console.log(emp);
+            //map creates new array for id choices
             let employee = emp.map(element => element.first_name); 
-            // console.log(ids);
+            // console.log(employee);
         inquirer
         .prompt([
         {
@@ -191,8 +191,10 @@ const addDepartments = () => {
            ]
         },
        ]).then(function(data){
-    const sql = `UPDATE employee SET role_id WHERE id = ? VALUES (?, ?)`;
-          const params = [data.employee, data.role];
+        //filters through employees to select correct one
+    const empId = emp.filter(item => item.first_name === data.employee)[0].id
+    const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+          const params = [ data.role, empId];
           db.query(sql, params, (err, result) => {
             if (err) {
               console.error(err);
@@ -206,19 +208,6 @@ const addDepartments = () => {
         })
       })
      };
-
-//   const updateEmployeeRole = (employeeObject) => {
-//     const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
-//     const params = [employeeObject.role, employeeObject.employee];
-//     db.query(sql, params, (err, result) => {
-//       if (err) {
-//         console.error(err);
-//         return;
-//       }
-//       console.log("Employee role has been updated.");
-//       initialize();
-//     });
-//   };
 
 // quit
   const quit = () => {
