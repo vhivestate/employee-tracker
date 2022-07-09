@@ -27,5 +27,8 @@ I would run the application each time I would update the code to make sure it wa
 ## Live Link
 [gibhub](https://vhivestate.github.io/employee-tracker/)
 
+## Video Link
+[video](https://drive.google.com/file/d/1YpSdhH4e5yeRSaCicvNWw-QuWTE5njIy/view?usp=sharing)
+
 ## Questions
  If you have any questions feel free to contact me [via email](mailto:garcia.valeria001@gmail.com). or [on GitHub](https://github.com/vhivestate).
