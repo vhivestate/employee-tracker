@@ -25,7 +25,7 @@ I got help from my tutor and TA's to help complete this as well as some students
 I would run the application each time I would update the code to make sure it was functioning.
 
 ## Live Link
-[gibhub](https://vhivestate.github.io/employee-tracker/)
+[github](https://vhivestate.github.io/employee-tracker/)
 
 ## Video Link
 [video](https://drive.google.com/file/d/1YpSdhH4e5yeRSaCicvNWw-QuWTE5njIy/view?usp=sharing)
